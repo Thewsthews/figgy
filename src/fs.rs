@@ -61,18 +61,10 @@ impl FigConfig {
     pub fn save_type(&self) -> FigSaveType {
         self.save_type.clone().unwrap_or_default()
     }
-    pub fn get_character(&self) -> (String, String) {
+    pub fn get_character(&self) -> (String, String){
         (
-            if let Some(c) = &self.add_char {
-                c.clone()
-            } else {
-                "⬆".into()
-            },
-            if let Some(c) = &self.take_char {
-                c.clone()
-            } else {
-                "⬇".into()
-            },
+            self.add_char.clone().unwrap_or_else(|| "⬆".into()),
+            self.take_char.clone().unwrap_or_else(|| "⬇". into()),
         )
     }
     pub fn get_opts(&self) -> CurrencyOpts {
