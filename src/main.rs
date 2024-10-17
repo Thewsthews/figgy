@@ -98,17 +98,19 @@ fn main() {
     let bal = Currency::new_float(data.get_balance(), Some(opt.clone()));
     let save_type = config.save_type();
     if let Some(command) = args.command {
-        match command {
-            FigCommands::Add { amount, message } => {
-                let input_data = get_data("add", amount, message, &mut r);
-                let amt = Currency::new_float(input_data.0, Some(opt.clone()));
-                set_balance(bal, amt, data, "Adding", false, input_data.1, save_type)
-            }
-            FigCommands::Take { amount, message } => {
-                let input_data = get_data("take", amount, message, &mut r);
-                let amt = Currency::new_float(input_data.0, Some(opt.clone()));
-                set_balance(bal, amt, data, "Taking", true, input_data.1, save_type)
-            }
+       match command{
+           FigCommands::Add {amount, message} | FigCommands::Take{amount,message}=>{
+               let (action, is_take) = if matches!(command, FigCommands::Take){..}){
+                   ("take", true)
+               }
+               else{
+                   ("add", false)
+               };
+               let(amount, message) = get_data(action, amount, message &mut r);
+               let amt = Currency::ne_float(amount, Some(opt.clone()));
+               set_balance(bal, amt, data,if is_tale{"Taking"}else{"Adding"}, is_take, message, save_type)
+           }
+       }
             FigCommands::Log => {
                 //pager::Pager::new().setup();
                 let mut bal = Currency::new_float(0.0, Some(opt.clone()));
